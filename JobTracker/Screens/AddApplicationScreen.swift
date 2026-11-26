@@ -13,8 +13,30 @@ struct AddApplicationScreen: View {
     @State private var status: ApplicationStatus = .saved
     @State private var salary: Double?
     @State private var notes = ""
-    
-    let onSave:(NewJobApplication) -> Void
+
+    let onSave: (NewJobApplication) -> Void
+
+    private func saveApplication() {
+        guard isFormValid else {
+            return
+        }
+        let trimmedNotes = notes.trimmingCharacters(
+            in: .whitespacesAndNewlines
+        )
+        let payload = NewJobApplication(
+            company: company.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            ),
+            role: role.trimmingCharacters(
+                in: .whitespacesAndNewlines
+            ),
+            status: status,
+            salary: salary,
+            notes: trimmedNotes.isEmpty ? nil : notes
+        )
+        onSave(payload)
+        dismiss()
+    }
 
     private var isFormValid: Bool {
         !company.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -67,18 +89,8 @@ struct AddApplicationScreen: View {
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") {
-                        // Save application
-                        let payload = NewJobApplication(
-                            company: company,
-                            role: role,
-                            status: status,
-                            salary: salary,
-                            notes: notes.isEmpty ? nil : notes
-                        )
-                        onSave(payload)
-                        dismiss()
-                    }.disabled(!isFormValid)
+                    Button("Save",action:saveApplication)
+                        .disabled(!isFormValid)
                 }
             }
         }
@@ -86,7 +98,7 @@ struct AddApplicationScreen: View {
 }
 
 #Preview {
-    AddApplicationScreen{ newApplication in
-        
+    AddApplicationScreen { newApplication in
+
     }
 }

@@ -5,7 +5,7 @@
 //  Created by abhishek on 26/11/26.
 //
 
-import SwiftUI
+import Foundation
 
 /// Represents the lifecycle state of a job application.
 /// Backed by `String` for readability and conforms to `Codable` and `CaseIterable` for persistence and UI.

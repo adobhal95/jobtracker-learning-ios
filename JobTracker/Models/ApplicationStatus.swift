@@ -24,15 +24,4 @@ enum ApplicationStatus: String, Codable, CaseIterable {
     
     /// The application was declined.
     case rejected
-    
-    /// A simple Color mapping used for lightweight UI styling (e.g., tags or labels).
-    var applicationStatusColor: Color {
-        switch self {
-        case .saved: return Color.gray
-        case .applied: return Color.blue
-        case .interview: return Color.orange
-        case .offer: return Color.green
-        case .rejected: return Color.red
-        }
-    }
 }

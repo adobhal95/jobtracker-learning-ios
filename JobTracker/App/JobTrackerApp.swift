@@ -11,7 +11,7 @@ import SwiftUI
 struct JobTrackerApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ApplicationListScreen(applications: MockApplications.samples)
         }
     }
 }

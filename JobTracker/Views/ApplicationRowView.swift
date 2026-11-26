@@ -8,20 +8,42 @@
 import SwiftUI
 
 struct ApplicationRowView: View {
-    var jobApplication:JobApplication
+
+    let jobApplication: JobApplication
+
     var body: some View {
-        HStack(){
-            VStack{
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+
                 Text(jobApplication.company)
+                    .font(.headline)
+
                 Text(jobApplication.role)
-                Text(jobApplication.salary ?? 0,format: .currency(code: "INR"))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                Group {
+                    if let salary = jobApplication.salary {
+                        Text(salary, format: .currency(code: "INR"))
+                    } else {
+                        Text("Salary not specified")
+                    }
+                }.font(.caption)
+                    .foregroundStyle(.secondary)
+
             }
+
             Spacer()
+
             StatusBadgeView(status: jobApplication.status)
         }
     }
 }
 
 #Preview {
-    ApplicationRowView(jobApplication: MockApplications.samples[0])
+    VStack(spacing: 16) {
+        ForEach(MockApplications.samples) { application in
+            ApplicationRowView(jobApplication: application)
+        }
+    }
+    .padding()
 }

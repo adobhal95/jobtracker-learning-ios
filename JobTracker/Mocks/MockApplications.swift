@@ -6,3 +6,13 @@
 //
 
 import Foundation
+
+struct MockApplications {
+    static let samples: [JobApplication] = [
+        JobApplication(id: 1, company: "KPMG", role: "Data Engineer", status: .interview, salary: 1_500_000, notes: nil),
+        JobApplication(id: 2, company: "NatWest", role: "Data Engineer", status: .applied, salary: 1_200_000, notes: nil),
+        JobApplication(id: 3, company: "Google", role: "Cloud Engineer", status: .saved, salary: 2_000_000, notes: nil),
+        JobApplication(id: 4, company: "Microsoft", role: "iOS Developer", status: .offer, salary: 1_800_000, notes: nil),
+        JobApplication(id: 5, company: "Amazon", role: "Software Engineer", status: .rejected, salary: nil, notes: nil)
+    ]
+}

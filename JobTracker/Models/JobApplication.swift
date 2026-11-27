@@ -9,7 +9,7 @@ import Foundation
 
 /// A model representing a single job application record.
 /// Conforms to `Codable` for easy persistence and `Identifiable` for SwiftUI lists.
-struct JobApplication: Codable, Identifiable {
+struct JobApplication: Codable, Identifiable, Hashable {
     /// Unique identifier for the application
     let id: Int
 

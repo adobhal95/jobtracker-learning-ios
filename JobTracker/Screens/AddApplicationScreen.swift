@@ -64,7 +64,7 @@ struct AddApplicationScreen: View {
                                 .tag(status)
                         }
                     }
-                    .pickerStyle(.segmented)
+                    .pickerStyle(.menu)
                     TextField(
                         "Expected salary",
                         value: $salary,

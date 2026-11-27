@@ -30,10 +30,15 @@ struct ApplicationListScreen: View {
         NavigationStack {
             // Render a row for each JobApplication in the list.
             List(applications) { application in
-                ApplicationRowView(jobApplication: application)
+                NavigationLink(value: application, label: {
+                    ApplicationRowView(jobApplication: application)
+                })
             }
             .navigationTitle("Applications")
             // Toolbar with a plus button that presents the AddApplicationScreen.
+            .navigationDestination(for: JobApplication.self, destination: { application in
+                ApplicationDetailScreen(jobApplication: application)
+            })
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

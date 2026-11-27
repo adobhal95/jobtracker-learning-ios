@@ -7,12 +7,10 @@
 
 import SwiftUI
 
-/**
- A screen that displays a list of job applications.
- 
- This view owns its state for the list of applications and allows users to add new applications.
- New applications can be added by presenting a modal sheet.
- */
+/// A screen that displays a list of job applications.
+///
+/// This view owns its state for the list of applications and allows users to add new applications.
+/// New applications can be added by presenting a modal sheet.
 struct ApplicationListScreen: View {
     /// The list of job applications displayed in this view. Private to encapsulate state.
     @State private var applications: [JobApplication]
@@ -24,21 +22,51 @@ struct ApplicationListScreen: View {
     init(applications: [JobApplication] = []) {
         _applications = State(initialValue: applications)
     }
+    private func updateApplication(
+        id: Int,
+        payload: UpdateJobApplication
+    ) {
+        guard
+            let index = applications.firstIndex(
+                where: { $0.id == id }
+            )
+        else {
+            return
+        }
 
+        let existingApplication = applications[index]
+
+        let updatedApplication = JobApplication(
+            id: existingApplication.id,
+            company: existingApplication.company,
+            role: existingApplication.role,
+            status: payload.status,
+            salary: payload.salary,
+            notes: payload.notes
+        )
+
+        applications[index] = updatedApplication
+    }
     var body: some View {
         // NavigationStack provides navigation capabilities along with a title and toolbar area.
         NavigationStack {
             // Render a row for each JobApplication in the list.
             List(applications) { application in
-                NavigationLink(value: application, label: {
-                    ApplicationRowView(jobApplication: application)
-                })
+                NavigationLink(
+                    value: application,
+                    label: {
+                        ApplicationRowView(jobApplication: application)
+                    }
+                )
             }
             .navigationTitle("Applications")
             // Toolbar with a plus button that presents the AddApplicationScreen.
-            .navigationDestination(for: JobApplication.self, destination: { application in
-                ApplicationDetailScreen(jobApplication: application)
-            })
+            .navigationDestination(
+                for: JobApplication.self,
+                destination: { application in
+                    ApplicationDetailScreen(jobApplication: application)
+                }
+            )
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
@@ -56,13 +84,14 @@ struct ApplicationListScreen: View {
                 let nextID = (applications.map(\.id).max() ?? 0) + 1
                 applications.append(
                     JobApplication(
-                    id: nextID,
-                    company: newApplication.company,
-                    role: newApplication.role,
-                    status: newApplication.status,
-                    salary: newApplication.salary,
-                    notes: newApplication.notes
-                ))
+                        id: nextID,
+                        company: newApplication.company,
+                        role: newApplication.role,
+                        status: newApplication.status,
+                        salary: newApplication.salary,
+                        notes: newApplication.notes
+                    )
+                )
             }
         }
     }

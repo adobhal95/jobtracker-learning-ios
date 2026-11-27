@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct ApplicationDetailScreen: View {
-    @Environment(\.dismiss) private var dismiss
     let jobApplication: JobApplication
+    @State private var isEditPresented = false
     var body: some View {
         Form {
             Section("APPLICATION INFORMATION") {
@@ -41,19 +41,21 @@ struct ApplicationDetailScreen: View {
         }
         .navigationTitle(jobApplication.company)
         .navigationBarTitleDisplayMode(.inline)
-        .navigationBarBackButtonHidden(true)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Cancel") {
-                    dismiss()
-                }
-                .foregroundStyle(.blue.opacity(0.95))
-            }
             ToolbarItem(placement: .confirmationAction) {
                 Button("Edit") {
-
+                    isEditPresented = true
                 }
-                .foregroundStyle(.blue.opacity(0.95))
+            }
+        }
+        .sheet(isPresented: $isEditPresented) {
+            EditApplicationScreen(jobApplication: jobApplication) {
+                jobApplication in
+                let newPayload = UpdateJobApplication(
+                    status: jobApplication.status,
+                    salary: jobApplication.salary,
+                    notes: jobApplication.notes ?? ""
+                )
             }
         }
     }

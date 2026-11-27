@@ -46,6 +46,7 @@ struct ApplicationListScreen: View {
         )
 
         applications[index] = updatedApplication
+        print("3. Application updated: \(applications[index])")
     }
     var body: some View {
         // NavigationStack provides navigation capabilities along with a title and toolbar area.
@@ -53,7 +54,7 @@ struct ApplicationListScreen: View {
             // Render a row for each JobApplication in the list.
             List(applications) { application in
                 NavigationLink(
-                    value: application,
+                    value: application.id,
                     label: {
                         ApplicationRowView(jobApplication: application)
                     }
@@ -61,12 +62,28 @@ struct ApplicationListScreen: View {
             }
             .navigationTitle("Applications")
             // Toolbar with a plus button that presents the AddApplicationScreen.
-            .navigationDestination(
-                for: JobApplication.self,
-                destination: { application in
-                    ApplicationDetailScreen(jobApplication: application)
+            .navigationDestination(for: Int.self) { applicationID in
+
+                if let application = applications.first(
+                    where: { $0.id == applicationID }
+                ) {
+                    ApplicationDetailScreen(
+                        jobApplication: application,
+                        onUpdate: { payload in
+                            print("2. Parent received payload: \(payload)")
+                            updateApplication(
+                                id: applicationID,
+                                payload: payload
+                            )
+                        }
+                    )
+                } else {
+                    ContentUnavailableView(
+                        "Application Not Found",
+                        systemImage: "exclamationmark.circle"
+                    )
                 }
-            )
+            }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {

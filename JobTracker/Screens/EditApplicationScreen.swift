@@ -34,12 +34,11 @@ struct EditApplicationScreen: View {
         _notes = State(initialValue: jobApplication.notes ?? "")
     }
 
-
     private var isFormValid: Bool {
         salary.map { $0.isFinite && $0 >= 0 } ?? true
     }
 
-    private func OnEdit() {
+    private func saveApplication() {
         guard isFormValid else { return }
         let trimmedNotes = notes.trimmingCharacters(
             in: .whitespacesAndNewlines
@@ -50,7 +49,7 @@ struct EditApplicationScreen: View {
             salary: salary,
             notes: trimmedNotes.isEmpty ? nil : trimmedNotes
         )
-
+        print("1. Payload created: \(payload)")
         onUpdate(payload)
 
         dismiss()
@@ -64,7 +63,7 @@ struct EditApplicationScreen: View {
                         "Company",
                         value: jobApplication.company
                     )
-                    
+
                     LabeledContent(
                         "Role",
                         value: jobApplication.role
@@ -74,13 +73,13 @@ struct EditApplicationScreen: View {
                     Picker("Status", selection: $status) {
                         ForEach(ApplicationStatus.allCases, id: \.self) {
                             status in
-                            
+
                             Text(status.rawValue.capitalized)
                                 .tag(status)
                         }
                     }
                     .pickerStyle(.menu)
-                    
+
                     TextField(
                         "Expected salary",
                         value: $salary,
@@ -96,8 +95,15 @@ struct EditApplicationScreen: View {
             .navigationTitle(jobApplication.company)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        dismiss()
+                    }
+                }
+
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Save",action: OnEdit)
+                    Button("Save", action: saveApplication)
+                        .disabled(!isFormValid)
                 }
             }
         }
@@ -105,9 +111,10 @@ struct EditApplicationScreen: View {
 }
 
 #Preview {
-    NavigationStack {
-        EditApplicationScreen(jobApplication: MockApplications.samples[0]) {
-            newApp in
+    EditApplicationScreen(
+        jobApplication: MockApplications.samples[0],
+        onUpdate: { payload in
+            print(payload)
         }
-    }
+    )
 }

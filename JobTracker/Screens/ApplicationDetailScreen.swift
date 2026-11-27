@@ -9,6 +9,7 @@ import SwiftUI
 
 struct ApplicationDetailScreen: View {
     let jobApplication: JobApplication
+    let onUpdate: (UpdateJobApplication) -> Void
     @State private var isEditPresented = false
     var body: some View {
         Form {
@@ -49,20 +50,21 @@ struct ApplicationDetailScreen: View {
             }
         }
         .sheet(isPresented: $isEditPresented) {
-            EditApplicationScreen(jobApplication: jobApplication) {
-                jobApplication in
-                let newPayload = UpdateJobApplication(
-                    status: jobApplication.status,
-                    salary: jobApplication.salary,
-                    notes: jobApplication.notes ?? ""
-                )
-            }
+            EditApplicationScreen(
+                jobApplication: jobApplication,
+                onUpdate: onUpdate
+            )
         }
     }
 }
 
 #Preview {
     NavigationStack {
-        ApplicationDetailScreen(jobApplication: MockApplications.samples[0])
+        ApplicationDetailScreen(
+            jobApplication: MockApplications.samples[0],
+            onUpdate: { payload in
+                print(payload)
+            }
+        )
     }
 }
